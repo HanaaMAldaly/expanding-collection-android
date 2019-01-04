@@ -31,6 +31,11 @@ public class CardDataImpl implements ECCardData<String> {
     }
 
     @Override
+    public String getImageURL() {
+        return null;
+    }
+
+    @Override
     public List<String> getListItems() {
         return listItems;
     }

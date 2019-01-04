@@ -10,13 +10,13 @@ public class CardData implements ECCardData<Comment> {
     private String headTitle;
     private Integer headBackgroundResource;
     private Integer mainBackgroundResource;
-
     private Integer personPictureResource;
     private String personName;
     private String personMessage;
     private int personViewsCount;
     private int personCommentsCount;
     private int personLikesCount;
+    private String imageUrl;
     private List<Comment> listItems;
 
     public CardData() {
@@ -24,6 +24,9 @@ public class CardData implements ECCardData<Comment> {
         this.personViewsCount = 50 + rnd.nextInt(950);
         this.personCommentsCount = 35 + rnd.nextInt(170);
         this.personLikesCount = 10 + rnd.nextInt(1000);
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getHeadTitle() {
@@ -36,6 +39,11 @@ public class CardData implements ECCardData<Comment> {
 
     public Integer getHeadBackgroundResource() {
         return headBackgroundResource;
+    }
+
+    @Override
+    public String getImageURL() {
+      return imageUrl;
     }
 
     public void setHeadBackgroundResource(Integer headBackgroundResource) {

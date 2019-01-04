@@ -16,8 +16,8 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import java.util.List;
-
 import ramotion.com.expandingcollection.R;
+
 
 /**
  * Root PagerView element. Wraps all logic, animations and behavior.
@@ -205,6 +205,7 @@ public class ECPagerView extends FrameLayout implements ViewPager.OnPageChangeLi
         }
         if (pager.getAdapter() != null && onCardSelectedListener != null)
             onCardSelectedListener.cardSelected(pager.getCurrentPosition(), pager.getCurrentPosition(), pager.getAdapter().getCount());
+
     }
 
     /**
@@ -280,4 +281,7 @@ public class ECPagerView extends FrameLayout implements ViewPager.OnPageChangeLi
         void cardSelected(int newPosition, int oldPosition, int totalElements);
     }
 
+    public void selectItem(int position){
+        pager.setCurrentItem(position);
+    }
 }

@@ -17,5 +17,7 @@ public interface ECCardData<T> {
     @DrawableRes
     Integer getHeadBackgroundResource();
 
+    String getImageURL();
+
     List<T> getListItems();
 }

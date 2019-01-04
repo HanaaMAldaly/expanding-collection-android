@@ -13,7 +13,10 @@ import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 import ramotion.com.expandingcollection.R;
+
 
 /**
  * View used to be a card head that is visible when card is collapsed. Just frame layout with background image
@@ -22,10 +25,12 @@ import ramotion.com.expandingcollection.R;
 public class ECPagerCardHead extends FrameLayout {
 
     private ImageView headBackgroundImageView;
+    private Context context;
 
     public ECPagerCardHead(Context context) {
         super(context);
         init(context);
+        this.context = context;
     }
 
     public ECPagerCardHead(Context context, AttributeSet attrs) {
@@ -39,7 +44,6 @@ public class ECPagerCardHead extends FrameLayout {
     }
 
     public void init(Context context) {
-//        headBackgroundImageView = new TopCropImageView(context);
         headBackgroundImageView = new ImageView(context);
         headBackgroundImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.MATCH_PARENT);
@@ -68,8 +72,16 @@ public class ECPagerCardHead extends FrameLayout {
     }
 
     protected void setHeadImageBitmap(Bitmap headImageBitmap) {
+
         if (this.headBackgroundImageView != null)
             this.headBackgroundImageView.setImageBitmap(headImageBitmap);
+    }
+
+    protected void setHeadImageURL(String path) {
+        Picasso.get().load(path).error(R.drawable.grey_backgroud)
+                .fit()
+                .placeholder(R.drawable.grey_backgroud).into(this.headBackgroundImageView);
+
     }
 
     protected void animateHeight(int targetHeight, int duration, int delay) {
@@ -86,7 +98,6 @@ public class ECPagerCardHead extends FrameLayout {
         });
 
         cardHeadHeightAnimation.setIntValues(cardHeaderLayoutParams.height, targetHeight);
-
         cardHeadHeightAnimation.setDuration(duration);
         cardHeadHeightAnimation.setStartDelay(delay);
         cardHeadHeightAnimation.start();

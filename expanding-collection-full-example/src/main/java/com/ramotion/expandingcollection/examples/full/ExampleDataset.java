@@ -25,6 +25,7 @@ public class ExampleDataset {
         item5.setPersonName("Marjorie Ellis");
         item5.setPersonPictureResource(R.drawable.marjorie_ellis);
         item5.setListItems(prepareCommentsArray());
+        item5.setImageUrl("https://placekitten.com/200/300");
         dataset.add(item5);
 
         CardData item4 = new CardData();
@@ -35,6 +36,7 @@ public class ExampleDataset {
         item4.setPersonName("Mattew Jordan");
         item4.setPersonPictureResource(R.drawable.mattew_jordan);
         item4.setListItems(prepareCommentsArray());
+        item4.setImageUrl("https://placekitten.com/g/200/300");
         dataset.add(item4);
 
         CardData item3 = new CardData();
@@ -45,6 +47,7 @@ public class ExampleDataset {
         item3.setPersonName("Ross Rodriguez");
         item3.setPersonPictureResource(R.drawable.ross_rodriguez);
         item3.setListItems(prepareCommentsArray());
+        item3.setImageUrl("https://placekitten.com/200/300");
         dataset.add(item3);
 
         CardData item2 = new CardData();
@@ -55,6 +58,7 @@ public class ExampleDataset {
         item2.setPersonMessage("Nunquam perdere clabulare.");
         item2.setListItems(prepareCommentsArray());
         item2.setPersonPictureResource(R.drawable.tina_caldwell);
+        item2.setImageUrl("https://placekitten.com/g/200/300");
         dataset.add(item2);
 
         CardData item1 = new CardData();
@@ -65,12 +69,13 @@ public class ExampleDataset {
         item1.setPersonName("Wallace Sutton");
         item1.setPersonPictureResource(R.drawable.wallace_sutton);
         item1.setListItems(prepareCommentsArray());
+        item1.setImageUrl("https://placekitten.com/200/300");
         dataset.add(item1);
 
     }
 
     public List<ECCardData> getDataset() {
-        Collections.shuffle(dataset);
+       // Collections.shuffle(dataset);
         return dataset;
     }
 

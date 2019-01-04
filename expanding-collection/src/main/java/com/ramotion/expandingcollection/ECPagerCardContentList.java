@@ -41,7 +41,7 @@ public class ECPagerCardContentList extends ListView {
     public void init(Context context) {
         headView = new ECPagerCardHead(context);
         headView.setBackgroundColor(Color.RED);
-        headView.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT));
+        headView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         addHeaderView(headView);
 //        this.setOverScrollMode(OVER_SCROLL_NEVER);
     }

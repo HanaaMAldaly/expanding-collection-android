@@ -3,7 +3,7 @@ package com.ramotion.expandingcollection;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -13,10 +13,14 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.TranslateAnimation;
-import android.widget.FrameLayout;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
-import android.widget.ViewSwitcher;
+
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
+import ramotion.com.expandingcollection.R;
+
 
 /**
  * Custom Image Switcher for display and change background images with some pretty animations.
@@ -25,24 +29,17 @@ import android.widget.ViewSwitcher;
 public class ECBackgroundSwitcherView extends ImageSwitcher {
     private final int[] REVERSE_ORDER = new int[]{1, 0};
     private final int[] NORMAL_ORDER = new int[]{0, 1};
-
     private boolean reverseDrawOrder;
-
     private int bgImageGap;
     private int bgImageWidth;
-
     private int alphaDuration = 400;
     private int movementDuration = 500;
     private int widthBackgroundImageGapPercent = 12;
-
     private Animation bgImageInLeftAnimation;
     private Animation bgImageOutLeftAnimation;
-
     private Animation bgImageInRightAnimation;
     private Animation bgImageOutRightAnimation;
-
     private AnimationDirection currentAnimationDirection;
-
     private BitmapWorkerTask mCurrentAnimationTask;
 
     public ECBackgroundSwitcherView(Context context, AttributeSet attrs) {
@@ -61,11 +58,11 @@ public class ECBackgroundSwitcherView extends ImageSwitcher {
         bgImageGap = (displayMetrics.widthPixels / 100) * widthBackgroundImageGapPercent;
         bgImageWidth = displayMetrics.widthPixels + bgImageGap * 2;
 
-        this.setFactory(new ViewSwitcher.ViewFactory() {
+        this.setFactory(new ViewFactory() {
             public View makeView() {
                 ImageView myView = new ImageView(context);
                 myView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                myView.setLayoutParams(new FrameLayout.LayoutParams(bgImageWidth, FrameLayout.LayoutParams.MATCH_PARENT));
+                myView.setLayoutParams(new LayoutParams(bgImageWidth, LayoutParams.MATCH_PARENT));
                 myView.setTranslationX(-bgImageGap);
                 return myView;
             }
@@ -77,15 +74,15 @@ public class ECBackgroundSwitcherView extends ImageSwitcher {
         bgImageOutRightAnimation = createBgImageOutAnimation(0, bgImageGap, movementDuration);
     }
 
-//    public ECBackgroundSwitcherView withAnimationSettings(int movementDuration, int alphaDuration) {
-//        this.movementDuration = movementDuration;
-//        this.alphaDuration = alphaDuration;
-//        bgImageInLeftAnimation = createBgImageInAnimation(bgImageGap, 0, movementDuration, alphaDuration);
-//        bgImageOutLeftAnimation = createBgImageOutAnimation(0, -bgImageGap, movementDuration);
-//        bgImageInRightAnimation = createBgImageInAnimation(-bgImageGap, 0, movementDuration, alphaDuration);
-//        bgImageOutRightAnimation = createBgImageOutAnimation(0, bgImageGap, movementDuration);
-//        return this;
-//    }
+    public ECBackgroundSwitcherView withAnimationSettings(int movementDuration, int alphaDuration) {
+        this.movementDuration = movementDuration;
+        this.alphaDuration = alphaDuration;
+        bgImageInLeftAnimation = createBgImageInAnimation(bgImageGap, 0, movementDuration, alphaDuration);
+        bgImageOutLeftAnimation = createBgImageOutAnimation(0, -bgImageGap, movementDuration);
+        bgImageInRightAnimation = createBgImageInAnimation(-bgImageGap, 0, movementDuration, alphaDuration);
+        bgImageOutRightAnimation = createBgImageOutAnimation(0, bgImageGap, movementDuration);
+        return this;
+    }
 
     @Override
     protected int getChildDrawingOrder(int childCount, int i) {
@@ -99,18 +96,21 @@ public class ECBackgroundSwitcherView extends ImageSwitcher {
         this.reverseDrawOrder = reverseDrawOrder;
     }
 
-    private synchronized void setImageBitmapWithAnimation(Bitmap newBitmap, AnimationDirection animationDirection) {
-        if (this.currentAnimationDirection == animationDirection) {
-            this.setImageBitmap(newBitmap);
-        } else if (animationDirection == AnimationDirection.LEFT) {
-            this.setInAnimation(bgImageInLeftAnimation);
-            this.setOutAnimation(bgImageOutLeftAnimation);
-            this.setImageBitmap(newBitmap);
-        } else if (animationDirection == AnimationDirection.RIGHT) {
-            this.setInAnimation(bgImageInRightAnimation);
-            this.setOutAnimation(bgImageOutRightAnimation);
-            this.setImageBitmap(newBitmap);
-        }
+    private synchronized void setImageBitmapWithAnimation1(Bitmap newBitmap, AnimationDirection animationDirection, ECPager pager) {
+//        if (this.currentAnimationDirection == animationDirection) {
+//            this.setImageBitmap(newBitmap);
+//        } else if (animationDirection == AnimationDirection.LEFT) {
+//            this.setInAnimation(bgImageInLeftAnimation);
+//            this.setOutAnimation(bgImageOutLeftAnimation);
+//            this.setImageBitmap(newBitmap);
+//        } else if (animationDirection == AnimationDirection.RIGHT) {
+//            this.setInAnimation(bgImageInRightAnimation);
+//            this.setOutAnimation(bgImageOutRightAnimation);
+//            this.setImageBitmap(newBitmap);
+//        }
+        setImageBackgroundFromUrl(pager);
+
+
         this.currentAnimationDirection = animationDirection;
     }
 
@@ -133,10 +133,55 @@ public class ECBackgroundSwitcherView extends ImageSwitcher {
             cachedBitmap = BitmapFactory.decodeResource(getResources(), mainBgImageDrawableResource, new BitmapFactoryOptions());
             instance.addBitmapToBgMemoryCache(position, cachedBitmap);
         }
-        setImageBitmapWithAnimation(cachedBitmap, direction);
+        setImageBitmapWithAnimation1(cachedBitmap, direction, pager);
     }
 
-    public void updateCurrentBackgroundAsync(ECPager pager, final AnimationDirection direction) {
+    private synchronized void setImageBitmapWithAnimation(Bitmap newBitmap, AnimationDirection animationDirection) {
+        if (this.currentAnimationDirection == animationDirection) {
+            this.setImageBitmap(newBitmap);
+        } else if (animationDirection == AnimationDirection.LEFT) {
+            this.setInAnimation(bgImageInLeftAnimation);
+            this.setOutAnimation(bgImageOutLeftAnimation);
+            this.setImageBitmap(newBitmap);
+        } else if (animationDirection == AnimationDirection.RIGHT) {
+            this.setInAnimation(bgImageInRightAnimation);
+            this.setOutAnimation(bgImageOutRightAnimation);
+            this.setImageBitmap(newBitmap);
+        }
+
+        this.currentAnimationDirection = animationDirection;
+    }
+
+    private void setImageBackgroundFromUrl(ECPager pager) {
+        if(pager.getCurrentPosition()<pager.getAdapter().getCount()) {
+            final ECBackgroundSwitcherView ecBackgroundSwitcherView = this;
+            if (pager.getDataFromAdapterDataset(pager.getCurrentPosition()).getImageURL() != null) {
+                Picasso.get()
+                        .load(pager.getDataFromAdapterDataset(pager.getCurrentPosition()).getImageURL())
+                        .error(R.drawable.grey_backgroud)
+                        .placeholder(R.drawable.grey_backgroud)
+                        .into(new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                ecBackgroundSwitcherView.setImageBitmap(bitmap);
+                            }
+
+                            @Override
+                            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+
+                            }
+
+
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                            }
+                        });
+            }
+        }
+    }
+
+    public void updateCurrentBackgroundAsync(final ECPager pager, final AnimationDirection direction) {
         if (mCurrentAnimationTask != null && mCurrentAnimationTask.getStatus().equals(AsyncTask.Status.RUNNING)) {
             getInAnimation().cancel();
         }
@@ -147,7 +192,7 @@ public class ECBackgroundSwitcherView extends ImageSwitcher {
             @Override
             protected void onPostExecute(Bitmap bitmap) {
                 super.onPostExecute(bitmap);
-                setImageBitmapWithAnimation(bitmap, direction);
+                setImageBitmapWithAnimation1(bitmap, direction, pager);
             }
         };
         mCurrentAnimationTask.execute(position);
