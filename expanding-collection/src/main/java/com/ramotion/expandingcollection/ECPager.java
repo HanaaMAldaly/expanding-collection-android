@@ -12,12 +12,14 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 
+import com.duolingo.open.rtlviewpager.RtlViewPager;
+
 /**
  * Custom ViewPager used as main card pager, neighborhood elements are visible due to {@link ECPagerView},
  * so this pager element used only inside {@link ECPagerView}. Also pager can change self position and size
  * for animation purposes.
  */
-public class ECPager extends ViewPager {
+public class ECPager extends RtlViewPager {
     private int currentPosition;
     private boolean pagingDisabled;
 

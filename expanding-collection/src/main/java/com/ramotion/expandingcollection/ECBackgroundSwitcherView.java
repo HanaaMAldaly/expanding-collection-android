@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -62,8 +63,8 @@ public class ECBackgroundSwitcherView extends ImageSwitcher {
             public View makeView() {
                 ImageView myView = new ImageView(context);
                 myView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                myView.setLayoutParams(new LayoutParams(bgImageWidth, LayoutParams.MATCH_PARENT));
-                myView.setTranslationX(-bgImageGap);
+                myView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+          //      myView.setTranslationX(-bgImageGap);
                 return myView;
             }
         });
